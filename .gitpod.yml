@@ -1,0 +1,8 @@
+ports:
+  - port: 3000
+    onOpen: notify
+tasks:
+  - command: python3 -m http.server 8080
+    name: webserver
+  - command: >
+    name: terminal
