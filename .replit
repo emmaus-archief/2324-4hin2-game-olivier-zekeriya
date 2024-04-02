@@ -4,6 +4,8 @@ run = ""
 # A list of globs that specify which files and directories should
 # be hidden in the workspace.
 hidden = [".config", ".github", ".gitpod.yml", ".gitpod", ".vscode", "p5.d.ts", "p5.global-mode.d.ts"]
+entrypoint = "index.html"
+modules = ["web:v2-20230623-0b7a606"]
 
 # hosting is currently hardcoded for this language
 # [hosting]
@@ -181,3 +183,7 @@ pattern = "**/{*.less,*.scss,*.css}"
       unknownVendorSpecificProperties = "ignore" # Unknown vendor specific property.
       vendorPrefix = "warning" # When using a vendor-specific prefix also include the standard property
       zeroUnits = "ignore" # No unit for zero needed"
+
+[deployment]
+publicDir = "/"
+deploymentTarget = "static"

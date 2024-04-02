@@ -32,7 +32,21 @@ var health = 100;  // health van speler
  */
 var beweegAlles = function() {
   // speler
+if (keyIsDown(65)) {
+  spelerX = spelerX -30;
+}
 
+if (keyIsDown(87)) {
+    spelerY = spelerY -30;
+}
+
+if (keyIsDown(83)) {
+    spelerY = spelerY +30;
+}
+
+if (keyIsDown(68)) {
+    spelerX = spelerX +30;
+}
   // vijand
 
   // kogel
@@ -57,16 +71,16 @@ var verwerkBotsing = function() {
  */
 var tekenAlles = function() {
   // achtergrond
-
+fill("green");
+rect(0,0,2560,1920);
   // vijand
 
   // kogel
 
   // speler
   fill("white");
-  rect(spelerX - 25, spelerY - 25, 50, 50);
-  fill("black");
-  ellipse(spelerX, spelerY, 10, 10);
+  rect(spelerX - 50, spelerY + 50, 100, 100);
+
 
   // punten en health
 
@@ -83,7 +97,7 @@ var tekenAlles = function() {
  */
 function setup() {
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
-  createCanvas(1280, 720);
+  createCanvas(2560,1920);
 
   // Kleur de achtergrond blauw, zodat je het kunt zien
   background('blue');
