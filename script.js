@@ -25,6 +25,8 @@ var vijandX = 300;
 var vijandY = 300;
 var health = 100;  // health van speler
 
+var bg;
+
 /* ********************************************* */
 /* functies die je gebruikt in je game           */
 /* ********************************************* */
@@ -87,6 +89,11 @@ var verwerkBotsing = function() {
 /**
  * Tekent spelscherm
  */
+function draw() {
+// background(bg);
+image(bg, 0, 0, 1280, 720)
+};
+
 var tekenAlles = function() {
   // achtergrond
   fill("green");
@@ -115,11 +122,13 @@ var tekenAlles = function() {
  * de p5 library, zodra het spel geladen is in de browser
  */
 function setup() {
+  bg = loadImage('arena2.jpeg');
+  
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
   createCanvas(2560, 1920);
 
   // Kleur de achtergrond blauw, zodat je het kunt zien
-  background('blue');
+  //background('blue');
 }
 
 /**
