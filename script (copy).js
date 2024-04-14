@@ -21,19 +21,10 @@ var spelStatus = SPELEN;
 
 var spelerX = 250; // x-positie van speler
 var spelerY = 600; // y-positie van speler 
-var vijandX = 1300; // x-positie van vijand
-var vijandY = 560; // y-positie van vijand
+var vijandX = 1600; // x-positie van vijand
+var vijandY = 750; // y-positie van vijand
 var health = 100;  // health van speler
 var bg;
-var ratio = 4; // vergrotings ratio van sprites
-var sprite_width = 90; // breedte van 1 sprite Ryu
-var sprite_height = 110; // hoogte van 1 sprite Ryu
-let sprite_width2 = 66; // breedte van 1 sprite Ken
-let sprite_height2 = 120; // hoogte van 1 sprite Ken
-var sprite; // sprite nummers van 1 t/m 5
-var vertragingsteller = 0; // compenseer framerate voor spite animatie
-
-
 /* ********************************************* */
 /* functies die je gebruikt in je game           */
 /* ********************************************* */
@@ -41,27 +32,42 @@ var vertragingsteller = 0; // compenseer framerate voor spite animatie
 /**
  * Updatet globale variabelen met posities van speler, vijanden en kogels
  */
-let snelheid_spelers = 5;
 var beweegAlles = function() {
   // speler
   if (keyIsDown(65)) { //Left
-    spelerX = spelerX - snelheid_spelers;
+    spelerX = spelerX -15;
   }
-    
+  
+  if (keyIsDown(87)) { //Up
+      spelerY = spelerY -15;
+  }
+  
+  if (keyIsDown(83)) { //Down
+      spelerY = spelerY +15;
+  }
+  
   if (keyIsDown(68)) { //Right
-      spelerX = spelerX + snelheid_spelers;
+      spelerX = spelerX +15;
   }
   
   // vijand 
   if (keyIsDown(37)) { //Left
-    vijandX = vijandX - snelheid_spelers;
+    vijandX = vijandX -15;
+  }
+
+  if (keyIsDown(38)) { //Up
+    vijandY = vijandY -15;
+  }
+
+  if (keyIsDown(40)) { //Down
+    vijandY = vijandY +15;
   }
 
   if (keyIsDown(39)) { //Right
-    vijandX = vijandX + snelheid_spelers;
+    vijandX = vijandX +15;
   }
 
-  // punch
+  // kogel
 };
 
 /**
@@ -84,20 +90,14 @@ var verwerkBotsing = function() {
 var tekenAlles = function() {
   // achtergrond weergeven
   image(img_bg, 0, 0); 
-
-  // Idle animatie
-  sprite = Math.round(vertragingsteller) // afronden op gehele getallen voor sprites
-  if (sprite === 5) { // reset sprite na 5
-      sprite = 0;
-      vertragingsteller = 0;
-  }
-  image(img_speler, spelerX, spelerY, sprite_width * ratio, sprite_height * ratio, sprite * sprite_width, 0, sprite_width, sprite_height); // Idle Ryu animatie
-  let sx = (img_vijand.width - 410) + (sprite_width2 * sprite); // Begint bij eerste sprite op 410px van rechts voor Ken spritesheet
-  image(img_vijand, vijandX, vijandY, sprite_width2 * ratio, sprite_height2 * ratio, sx , 0, sprite_width2, sprite_height2); // Idle Ken animatie
+  // speler
+  image(img_speler, spelerX, spelerY, img_speler.width * 3, img_speler.height * 5, 0, 0, 43, img_speler.height); // Eerste Ryu sprite
+  image(img_speler, spelerX + 350, spelerY, img_speler.width * 6, img_speler.height * 5, 49, 0); // Tweede (punch) Ryu sprite
   
-  vertragingsteller += .1; // vertragingsteller ophogen voor volgende sprite
-
-  // aanvallen
+  // vijand
+  fill("black");
+  rect(vijandX - 30, vijandY - 25, 60, 50);
+  // kogel
 
   // punten en health
 
@@ -113,8 +113,8 @@ let img_speler;
 let img_vijand;
 function preload() {
   img_bg = loadImage('arena.jpeg');
-  img_speler = loadImage('ryu-spritesheet.png');
-  img_vijand = loadImage('ken-spritesheet.png');
+  img_speler = loadImage('ryu-2sprites.png');
+  //img_vijand = loadImage('ken.png');
 }
 
 /**
@@ -123,7 +123,7 @@ function preload() {
  * de p5 library, zodra het spel geladen is in de browser
  */
 function setup() {
-  frameRate(60);
+
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
   createCanvas(1920, 1040);
   background('blue');
@@ -138,7 +138,7 @@ function setup() {
  * de code in deze functie wordt 50 keer per seconde
  * uitgevoerd door de p5 library, nadat de setup functie klaar is
  */
-function draw() { 
+function draw() {
   if (spelStatus === SPELEN) {
     beweegAlles();
     verwerkBotsing();
