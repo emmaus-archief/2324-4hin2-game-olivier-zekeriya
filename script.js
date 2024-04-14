@@ -15,7 +15,7 @@
 /* ********************************************* */
 /* globale variabelen die je gebruikt in je game */
 /* ********************************************* */
-const SPELEN = 1;
+const SPELEN = 1;  
 const GAMEOVER = 2;
 const UITLEG = 6;
 var spelStatus = SPELEN;
@@ -80,7 +80,12 @@ var verwerkBotsing = function() {
   else {
     botsing = false;
   }
-    
+
+  if (botsing === true) {
+    health = health - 50;
+    spelerX = 250;
+    vijandX = 1300;
+  }
   // botsing kogel tegen vijand
 
   // update punten en health
@@ -109,7 +114,9 @@ var tekenAlles = function() {
   // aanvallen
 
   // punten en health
-
+  if (health < 0) {
+    spelStatus = GAMEOVER;
+  }
 };
 
 var checkGameover = function() {
@@ -163,7 +170,12 @@ function draw() {
   }
   if (spelStatus === GAMEOVER) {
     // teken game-over scherm
-    
+    textSize(100);
+    fill('yellow')
+    text('KO! PRESS SPACE TO START', 240, 520)
+    if (keyIsDown(32)) {  // Spatie
+      spelStatus = SPELEN;
+    }
   }
 
   if (spelStatus === UITLEG) {
