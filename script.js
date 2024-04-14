@@ -19,14 +19,12 @@ const SPELEN = 1;
 const GAMEOVER = 2;
 var spelStatus = SPELEN;
 
-var spelerX = 600; // x-positie van speler
-var spelerY = 600; // y-positie van speler 
-var vijandX = 300;
-var vijandY = 300;
+var spelerX = 300; // x-positie van speler
+var spelerY = 960; // y-positie van speler 
+var vijandX = 1600; // x-positie van vijand
+var vijandY = 960; // y-positie van vijand
 var health = 100;  // health van speler
-
 var bg;
-
 /* ********************************************* */
 /* functies die je gebruikt in je game           */
 /* ********************************************* */
@@ -36,39 +34,39 @@ var bg;
  */
 var beweegAlles = function() {
   // speler
-if (keyIsDown(65)) {
-  spelerX = spelerX -30;
-}
-
-if (keyIsDown(87)) {
-    spelerY = spelerY -30;
-}
-
-if (keyIsDown(83)) {
-    spelerY = spelerY +30;
-}
-
-if (keyIsDown(68)) {
-    spelerX = spelerX +30;
-}
-
+  if (keyIsDown(65)) { //Left
+    spelerX = spelerX -15;
+  }
   
-// vijand 
-  if (keyIsDown(74)) {
-    vijandX = vijandX -30;
+  if (keyIsDown(87)) { //Up
+      spelerY = spelerY -15;
+  }
+  
+  if (keyIsDown(83)) { //Down
+      spelerY = spelerY +15;
+  }
+  
+  if (keyIsDown(68)) { //Right
+      spelerX = spelerX +15;
+  }
+  
+  // vijand 
+  if (keyIsDown(37)) { //Left
+    vijandX = vijandX -15;
   }
 
-  if (keyIsDown(73)) {
-    vijandY = vijandY -30;
+  if (keyIsDown(38)) { //Up
+    vijandY = vijandY -15;
   }
 
-  if (keyIsDown(75)) {
-    vijandY = vijandY +30;
+  if (keyIsDown(40)) { //Down
+    vijandY = vijandY +15;
   }
 
-  if (keyIsDown(76)) {
-    vijandX = vijandX +30;
+  if (keyIsDown(39)) { //Right
+    vijandX = vijandX +15;
   }
+
   // kogel
 };
 
@@ -89,24 +87,25 @@ var verwerkBotsing = function() {
 /**
  * Tekent spelscherm
  */
-function draw() {
-// background(bg);
-image(bg, 0, 0, 1280, 720)
-};
+
+//***********function draw() {bgh
+//*********** background(bg);
+//***********image(bg, 0, 0, 1280, 720)
+//*********** };
 
 var tekenAlles = function() {
   // achtergrond
-  fill("green");
-  rect(0,0,2560,1920);
+  //fill("red");
+  //rect(0,0,1600,800);
+  image(img, 0, 0); 
   // vijand
   fill("black");
-  rect(vijandX - 50, vijandY + 50, 100, 100);
+  rect(vijandX - 30, vijandY - 25, 60, 50);
   // kogel
 
   // speler
   fill("white");
-  rect(spelerX - 50, spelerY + 50, 100, 100);
-
+  rect(spelerX - 30, spelerY - 25, 60, 50);
 
   // punten en health
 
@@ -116,17 +115,24 @@ var tekenAlles = function() {
 /* setup() en draw() functies / hoofdprogramma   */
 /* ********************************************* */
 
+/** Preload images */
+let img;
+function preload() {
+  // preload() runs once
+  img = loadImage('arena2.jpeg');
+}
 /**
  * setup
  * de code in deze functie wordt één keer uitgevoerd door
  * de p5 library, zodra het spel geladen is in de browser
  */
 function setup() {
-  bg = loadImage('arena2.jpeg');
-  
-  // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
-  createCanvas(2560, 1920);
 
+  // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
+  createCanvas(1920, 1040);
+  background('blue');
+  image(img, 0, 0); // Geef achtergrond weer
+  
   // Kleur de achtergrond blauw, zodat je het kunt zien
   //background('blue');
 }
