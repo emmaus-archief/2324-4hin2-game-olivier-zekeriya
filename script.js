@@ -17,6 +17,7 @@
 /* ********************************************* */
 const SPELEN = 1;
 const GAMEOVER = 2;
+const UITLEG = 6;
 var spelStatus = SPELEN;
 
 var spelerX = 250; // x-positie van speler
@@ -24,8 +25,10 @@ var spelerY = 600; // y-positie van speler
 var vijandX = 1300; // x-positie van vijand
 var vijandY = 560; // y-positie van vijand
 var health = 100;  // health van speler
+var botsing;
 var bg;
 var ratio = 4; // vergrotings ratio van sprites
+
 var sprite_width = 90; // breedte van 1 sprite Ryu
 var sprite_height = 110; // hoogte van 1 sprite Ryu
 let sprite_width2 = 66; // breedte van 1 sprite Ken
@@ -48,12 +51,12 @@ var beweegAlles = function() {
     spelerX = spelerX - snelheid_spelers;
   }
     
-  if (keyIsDown(68)) { //Right
+  if (keyIsDown(68) && botsing === false) { //Right
       spelerX = spelerX + snelheid_spelers;
   }
   
   // vijand 
-  if (keyIsDown(37)) { //Left
+  if (keyIsDown(37) && botsing === false) { //Left
     vijandX = vijandX - snelheid_spelers;
   }
 
@@ -71,7 +74,13 @@ var beweegAlles = function() {
  */
 var verwerkBotsing = function() {
   // botsing speler tegen vijand
-
+  if (spelerX - vijandX < 225 && spelerX - vijandX > -225) {
+  botsing = true;
+  } 
+  else {
+    botsing = false;
+  }
+    
   // botsing kogel tegen vijand
 
   // update punten en health
@@ -102,6 +111,11 @@ var tekenAlles = function() {
   // punten en health
 
 };
+
+var checkGameover = function() {
+  // Check of HP 0 is
+  return false;
+}
 
 /* ********************************************* */
 /* setup() en draw() functies / hoofdprogramma   */
@@ -149,5 +163,11 @@ function draw() {
   }
   if (spelStatus === GAMEOVER) {
     // teken game-over scherm
+    
+  }
+
+  if (spelStatus === UITLEG) {
+  // teken uitleg scherm
+  
   }
 }
