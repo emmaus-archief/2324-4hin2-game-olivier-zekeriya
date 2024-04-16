@@ -32,15 +32,31 @@ var ratio = 4; // vergrotings ratio van sprites
 
 var sprite_width = 90; // breedte van 1 sprite Ryu
 var sprite_height = 110; // hoogte van 1 sprite Ryu
-let sprite_width2 = 66; // breedte van 1 sprite Ken
-let sprite_height2 = 120; // hoogte van 1 sprite Ken
-var sprite; // sprite nummers van 1 t/m 5
+var sprite_width2 = 66; // breedte van 1 sprite Ken
+var sprite_height2 = 120; // hoogte van 1 sprite Ken
+var sprite; // sprite nummer uit reeks van sprites
 var vertragingsteller = 0; // compenseer framerate voor spite animatie
+
 
 
 /* ********************************************* */
 /* functies die je gebruikt in je game           */
 /* ********************************************* */
+
+// img is spritesheet, dx en dy is doelpositie, sw en sh is breedte en hoogte enkele sprite uit source image, n is aantal sprites in reeks, ratio is vergrotingsfactor van sprites
+var animeer_sprite = function (img, dx, dy, sx, sy, sw, sh, n, ratio)
+{ 
+  sprite = Math.round(vertragingsteller) // afronden op gehele getallen voor sprites
+  if (sprite === n) { // reset sprite en vertragingstelller
+      sprite = 0;
+      vertragingsteller = 0;
+  }
+  sx = sx + (sw * sprite); // x-positie van sprite
+  image(img, dx, dy, sw * ratio, sh * ratio, sx, sy, sw, sh); 
+
+  vertragingsteller += .05; // vertragingsteller ophogen voor volgende sprite
+
+}
 
 /**
  * Updatet globale variabelen met posities van speler, vijanden en kogels
@@ -98,7 +114,26 @@ var verwerkBotsing = function() {
 var tekenAlles = function() {
   // achtergrond weergeven
   image(img_bg, 0, 0); 
+  
+  //animeer_sprite(img_speler, spelerX, spelerY, 0, 0, 90, 110, 5, ratio) // Ryu
+  //animeer_sprite(img_vijand, vijandX, vijandY, 1136, 0, 66, 120, 6, ratio) // Ken
 
+  // Begin TEST met JSON
+  sprite = Math.round(vertragingsteller) // afronden op gehele getallen voor sprites
+  if (sprite === 5) { // reset sprite na 5
+      sprite = 0;
+      vertragingsteller = 0;
+  }
+
+  image(img_speler, spelerX, spelerY, sprite_width * ratio, sprite_height * ratio, sprite * sprite_width, 
+  0, sprite_width, sprite_height); // Idle Ryu animatie
+
+  
+  vertragingsteller += .1; // vertragingsteller ophogen voor volgende sprite
+  
+  // Eind TEST met JSON
+
+  /* 
   // Idle animatie
   sprite = Math.round(vertragingsteller) // afronden op gehele getallen voor sprites
   if (sprite === 5) { // reset sprite na 5
@@ -107,13 +142,14 @@ var tekenAlles = function() {
   }
   image(img_speler, spelerX, spelerY, sprite_width * ratio, sprite_height * ratio, sprite * sprite_width, 
   0, sprite_width, sprite_height); // Idle Ryu animatie
-  let sx = (img_vijand.width - 410) + (sprite_width2 * sprite); // Begint bij eerste sprite op 410px van         rechts voor Ken spritesheet
+  
+  let sx = (img_vijand.width - 410) + (sprite_width2 * sprite); // Begint bij eerste sprite op 410px van rechts voor Ken spritesheet
   
   image(img_vijand, vijandX, vijandY, sprite_width2 * ratio, sprite_height2 * ratio, sx , 0, 
   sprite_width2, sprite_height2); // Idle Ken animatie
   
   vertragingsteller += .1; // vertragingsteller ophogen voor volgende sprite
-
+  */
   // aanvallen
 
   // punten en health
@@ -140,11 +176,16 @@ var checkGameover = function() {
 // Preload code in deze functie wordt één keer uitgevoerd voordat setup start
 let img_bg;
 let img_speler;
+let img_speler_spritemapping_json;
 let img_vijand;
 function preload() {
   img_bg = loadImage('arena.jpeg');
   img_speler = loadImage('ryu-spritesheet.png');
   img_vijand = loadImage('ken-spritesheet.png');
+  img_speler_spritemapping_json = loadJSON('ryu-spritesheet.json'); // Laad spritesheet mapping JSON gemaakt met https://www.leshylabs.com/apps/sstool/
+
+  let jsontest = img_speler_spritemapping_json[1].x
+  console.log(jsontest);
 }
 
 /**
