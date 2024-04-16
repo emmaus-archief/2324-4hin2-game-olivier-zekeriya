@@ -29,6 +29,7 @@ var botsing;
 var bg;
 var ratio = 4; // vergrotings ratio van sprites
 
+
 var sprite_width = 90; // breedte van 1 sprite Ryu
 var sprite_height = 110; // hoogte van 1 sprite Ryu
 let sprite_width2 = 66; // breedte van 1 sprite Ken
@@ -86,10 +87,9 @@ var verwerkBotsing = function() {
     spelerX = 250;
     vijandX = 1300;
   }
-  // botsing kogel tegen vijand
+  // botsing vuist of voet tegen vijand
 
   // update punten en health
-
 };
 
 /**
@@ -105,9 +105,12 @@ var tekenAlles = function() {
       sprite = 0;
       vertragingsteller = 0;
   }
-  image(img_speler, spelerX, spelerY, sprite_width * ratio, sprite_height * ratio, sprite * sprite_width, 0, sprite_width, sprite_height); // Idle Ryu animatie
-  let sx = (img_vijand.width - 410) + (sprite_width2 * sprite); // Begint bij eerste sprite op 410px van rechts voor Ken spritesheet
-  image(img_vijand, vijandX, vijandY, sprite_width2 * ratio, sprite_height2 * ratio, sx , 0, sprite_width2, sprite_height2); // Idle Ken animatie
+  image(img_speler, spelerX, spelerY, sprite_width * ratio, sprite_height * ratio, sprite * sprite_width, 
+  0, sprite_width, sprite_height); // Idle Ryu animatie
+  let sx = (img_vijand.width - 410) + (sprite_width2 * sprite); // Begint bij eerste sprite op 410px van         rechts voor Ken spritesheet
+  
+  image(img_vijand, vijandX, vijandY, sprite_width2 * ratio, sprite_height2 * ratio, sx , 0, 
+  sprite_width2, sprite_height2); // Idle Ken animatie
   
   vertragingsteller += .1; // vertragingsteller ophogen voor volgende sprite
 
@@ -118,6 +121,12 @@ var tekenAlles = function() {
     spelStatus = GAMEOVER;
   }
 };
+
+var healthBar = function() { // health bar
+   
+  fill("red"); 
+  rect(0, 0, health, 20);
+}
 
 var checkGameover = function() {
   // Check of HP 0 is
@@ -171,15 +180,26 @@ function draw() {
   if (spelStatus === GAMEOVER) {
     // teken game-over scherm
     textSize(100);
-    fill('yellow')
-    text('KO! PRESS SPACE TO START', 240, 520)
+    fill('yellow');
+    text('KO! PRESS SPACE TO START', 240, 520);
     if (keyIsDown(32)) {  // Spatie
-      spelStatus = SPELEN;
+      spelStatus = UITLEG;
     }
   }
 
   if (spelStatus === UITLEG) {
-  // teken uitleg scherm
-  
+    // teken uitleg scherm
+    textSize(100);
+    fill('yellow');
+    image(img_bg, 0, 0, 1920, 1040);
+    image(img_speler, spelerX, spelerY, sprite_width * ratio, sprite_height * ratio, sprite *             
+    sprite_width, 0, sprite_width, sprite_height);
+    image(img_vijand, vijandX, vijandY, sprite_width2 * ratio, sprite_height2 * ratio, img_vijand.width -       410 + sprite_width2 * sprite , 0, sprite_width2, sprite_height2);
+    text('PRESS V TO PLAY', 240, 520);
+    if (keyIsDown(86)) {  // V
+      spelerX = 250;
+      vijandX = 1300;
+      spelStatus = SPELEN;
+    }
   }
 }
