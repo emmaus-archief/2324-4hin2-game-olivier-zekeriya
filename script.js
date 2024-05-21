@@ -46,7 +46,7 @@ const ryu =
         loc: [
             { x: 253, y: 269, width: 60, height: 94 },
             { x: 333, y: 268, width: 74, height: 95 },
-            { x: 432, y: 268, width: 108, height: 94 }
+            { x: 432, y: 268, width: 108, height: 94 } 
         ]
     },
     kick: {
@@ -146,7 +146,16 @@ var beweegAlles = function() {
         vijandX = vijandX + snelheid_spelers;
     }
 
-    // punch
+    // punch speler
+    if (keyIsDown(81)) {
+        //spelerX = spelerX + "punch?"
+        // Hier Ryu punch animatie met sprites
+    }
+        
+    // highkick speler
+    if (keyIsDown(69)) {
+        // Hier Ryu highkick animatie met sprites
+    }
 };
 
 /**
@@ -155,8 +164,27 @@ var beweegAlles = function() {
  * Updatet globale variabelen punten en health
  */
 var verwerkBotsing = function() {
-    // botsing speler tegen vijand
-    if (spelerX - vijandX < 225 && spelerX - vijandX > -225) {
+    // botsing Ryu punch
+    if (keyIsDown(81) && spelerX - vijandX < 225 && spelerX - vijandX > -225) {
+        botsing = true;
+    }
+
+    else {
+        botsing = false;
+    }
+
+    if (botsing === true) {
+        health = health - 15;
+        spelerX = spelerX - 100;
+        vijandX = vijandX + 150;
+    }
+
+
+
+
+
+    
+    /* if (spelerX - vijandX < 225 && spelerX - vijandX > -225) {
         botsing = true;
     }
     else {
@@ -167,8 +195,9 @@ var verwerkBotsing = function() {
         health = health - 50;
         spelerX = 250;
         vijandX = 1300;
-    }
-    // botsing vuist of voet tegen vijand
+    } 
+    */
+    // botsing highkick
 
     // update punten en health
 };
@@ -198,6 +227,8 @@ var healthBar = function() { // health bar
 
     fill("red");
     rect(0, 0, health, 20);
+
+   
 }
 
 var checkGameover = function() {
