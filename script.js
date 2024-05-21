@@ -9,7 +9,7 @@
 /*
  * instellingen om foutcontrole van je code beter te maken 
  */
-"use strict"
+"use strict";
 
 /* ********************************************* */
 /* globale variabelen die je gebruikt in je game */
@@ -18,6 +18,14 @@ const SPELEN = 1;
 const GAMEOVER = 2;
 const UITLEG = 6;
 var spelStatus = UITLEG;
+
+// alle mogelijke actions van een speler
+const idle = 0;
+const PUNCH = 1;
+const KICK = 2;
+const HIGHKICK = 3;
+var ryuAction = idle;
+var kenAction = idle;
 
 var spelerX = 250; // x-positie van speler
 var spelerY = 600; // y-positie van speler 
@@ -28,8 +36,10 @@ var botsing;
 var bg;
 
 var ratio = 4; // vergrotings ratio van sprites
-var gameFrame = 0;
+var gameFrame = 0; // Eerste frame van het spel
 const staggerFrames = 30; // aantal frames vertragen
+
+// Sprite objecten voor beide spelers met de locaties elke sprite in de sprite sheet per actie
 const ryu =
 {
     imagefilename: "ryu-spritesheet.png",
@@ -46,7 +56,7 @@ const ryu =
         loc: [
             { x: 253, y: 269, width: 60, height: 94 },
             { x: 333, y: 268, width: 74, height: 95 },
-            { x: 432, y: 268, width: 108, height: 94 } 
+            { x: 432, y: 268, width: 108, height: 94 }
         ]
     },
     kick: {
@@ -109,17 +119,19 @@ const ken =
 /* functies die je gebruikt in je game           */
 /* ********************************************* */
 
-// img is spritesheet, dx en dy is doelpositie, sw en sh is breedte en hoogte enkele sprite uit source image, n is aantal sprites in reeks, ratio is vergrotingsfactor van sprites
+// Animeer Sprite functie: img is spritesheet, sprite_name is naam uit dx en dy is doelpositie, sw en sh is breedte en hoogte enkele sprite uit source image, n is aantal sprites in reeks, ratio is vergrotingsfactor van sprites
 function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio) {
-    let maxframes = eval(sprite_name + '.' + sprite_action + '.loc.length') // het aantal frames van de sprite
-    let frame = Math.floor(gameFrame / staggerFrames) % maxframes; // vertraging van frames
+    let maxframes = eval(sprite_name + '.' + sprite_action + '.loc.length') // length is het totaal aantal frames van een sprite action
+    let frame = Math.floor(gameFrame / staggerFrames) % maxframes; // bepaal frame nummer met vertragingsfactor
 
-    let sx = eval(sprite_name + '.' + sprite_action + '.loc[frame].x'); // x-positie van sprite
-    let sy = eval(sprite_name + '.' + sprite_action + '.loc[frame].y');
-    let sw = eval(sprite_name + '.' + sprite_action + '.loc[frame].width');
-    let sh = eval(sprite_name + '.' + sprite_action + '.loc[frame].height');
+    // eval wordt gebruikt om de samengestelde naam van het object bestaande uit de functie parameters sprite_name en sprite_action te evalueren. Zonder eval zal JavaScript niet weten wat de waarde van het object is.
+    // Voorbeeld object: ken.punch.loc[0].x geeft de x coordinaat van sprite Ken met action punch van de eerste frame (0).
+    let sx = eval(sprite_name + '.' + sprite_action + '.loc[frame].x'); // x-positie van frame
+    let sy = eval(sprite_name + '.' + sprite_action + '.loc[frame].y'); // y-positie van frame
+    let sw = eval(sprite_name + '.' + sprite_action + '.loc[frame].width'); // width van frame
+    let sh = eval(sprite_name + '.' + sprite_action + '.loc[frame].height'); // height van frame
     image(img, dx, dy, sw * ratio, sh * ratio, sx, sy, sw, sh);
-    gameFrame++;
+    gameFrame++; // verhoog gameFrame met 1
 
 }
 
@@ -129,33 +141,45 @@ function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio) {
 let snelheid_spelers = 5;
 var beweegAlles = function() {
     // speler
-    if (keyIsDown(65)) { //Left
+    if (keyIsDown(65)) { //Left key A
         spelerX = spelerX - snelheid_spelers;
     }
 
-    if (keyIsDown(68) && botsing === false) { //Right
+    if (keyIsDown(68) && botsing === false) { //Right key D
         spelerX = spelerX + snelheid_spelers;
     }
 
     // vijand 
-    if (keyIsDown(37) && botsing === false) { //Left
+    if (keyIsDown(37) && botsing === false) { //Left arrow key
         vijandX = vijandX - snelheid_spelers;
     }
 
-    if (keyIsDown(39)) { //Right
+    if (keyIsDown(39)) { //Right arrow key
         vijandX = vijandX + snelheid_spelers;
     }
 
-    // punch speler
-    if (keyIsDown(81)) {
+    // Ryu punch
+    if (keyIsDown(81)) { // key Q
+        ryuAction = PUNCH;
         //spelerX = spelerX + "punch?"
-        // Hier Ryu punch animatie met sprites
     }
-        
-    // highkick speler
-    if (keyIsDown(69)) {
-        // Hier Ryu highkick animatie met sprites
+
+    // Ryu highkick
+    if (keyIsDown(69)) { // key E
+        ryuAction = HIGHKICK;
     }
+
+    // Ken punch
+    if (keyIsDown(80)) { // key P
+        kenAction = PUNCH;
+        //spelerX = spelerX + "punch?"
+    }
+
+    // Ken highkick
+    if (keyIsDown(79)) { // key O
+        kenAction = HIGHKICK;
+    }
+
 };
 
 /**
@@ -165,11 +189,11 @@ var beweegAlles = function() {
  */
 var verwerkBotsing = function() {
     // botsing Ryu punch
-    if (keyIsDown(81) && spelerX - vijandX < 225 && spelerX - vijandX > -225) {
+    if (ryuAction === PUNCH && vijandX - spelerX < 350) {
         botsing = true;
-    }
-
-    else {
+    } else if (ryuAction === HIGHKICK && vijandX - spelerX < 370) {
+        botsing = true;
+    } else {
         botsing = false;
     }
 
@@ -183,7 +207,7 @@ var verwerkBotsing = function() {
 
 
 
-    
+
     /* if (spelerX - vijandX < 225 && spelerX - vijandX > -225) {
         botsing = true;
     }
@@ -206,14 +230,42 @@ var verwerkBotsing = function() {
  * Tekent spelscherm
  */
 var tekenAlles = function() {
-    // achtergrond weergeven
+    // achtergrond weergeven en verversen
     image(img_bg, 0, 0);
 
-    animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio) // Ryu
-    //animeer_sprite(img_speler, "ryu", "punch", 550, spelerY, ratio) // Ryu
-    //animeer_sprite(img_speler, "ryu", "highkick", 1000, spelerY, ratio) // Ryu
+    if (ryuAction === HIGHKICK) {
+        animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // animeer highkick totdat alle frame zijn geweest.
+        let actionframe = gameFrame;
+        if (gameFrame = actionframe + ryu.highkick.loc.length) { // als alle frames zijn geweest, reset gameFrame
+            ryuAction = idle;
+        }
+    } else if (ryuAction === PUNCH) {
+        animeer_sprite(img_speler, "ryu", "punch", spelerX, spelerY, ratio) // animeer highkick totdat alle frame zijn geweest.
+        let actionframe = gameFrame;
+        if (gameFrame = actionframe + ryu.punch.loc.length) { // als alle frames zijn geweest, reset gameFrame
+            ryuAction = idle;
+        }
+    } else {
+        animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio) // Ryu
+    }
 
-    animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio) // Ken
+    // Animeer Ken
+    if (kenAction === HIGHKICK) {
+        animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // Ken
+        let actionframe = gameFrame;
+        if (gameFrame = actionframe + ken.highkick.loc.length) { // als alle frames zijn geweest, reset gameFrame
+            kenAction = idle;
+        }
+    } else if (kenAction === PUNCH) {
+        animeer_sprite(img_vijand, "ken", "punch", vijandX, vijandY, ratio) // Ken
+        let actionframe = gameFrame;
+        if (gameFrame = actionframe + ken.punch.loc.length) { // als alle frames zijn geweest, reset gameFrame
+            kenAction = idle;
+        }
+    } else {
+        animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio) // Ken
+    }
+
 
     // aanvallen
 
@@ -228,7 +280,7 @@ var healthBar = function() { // health bar
     fill("red");
     rect(0, 0, health, 20);
 
-   
+
 }
 
 var checkGameover = function() {
