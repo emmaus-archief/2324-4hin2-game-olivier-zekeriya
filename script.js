@@ -180,6 +180,19 @@ var beweegAlles = function() {
         kenAction = HIGHKICK;
     }
 
+    // Ryu niet laten lopen tijdens het aanvallen
+    if (ryuAction === PUNCH) {
+        snelheid_spelers = 0;
+    } else{
+        snelheid_spelers = 5;
+    }
+
+    // Ken niet laten lopen tijdens het aanvallen
+    if (kenAction === PUNCH) {
+        snelheid_spelers = 0;
+    } else{
+        snelheid_spelers = 5;
+    }
 };
 
 /**
@@ -198,15 +211,10 @@ var verwerkBotsing = function() {
     }
 
     if (botsing === true) {
-        health = health - 15;
+        health = health - 34;
         spelerX = spelerX - 100;
-        vijandX = vijandX + 150;
+        vijandX = vijandX + 125;
     }
-
-
-
-
-
 
     /* if (spelerX - vijandX < 225 && spelerX - vijandX > -225) {
         botsing = true;
@@ -273,15 +281,44 @@ var tekenAlles = function() {
     if (health < 0) {
         spelStatus = GAMEOVER;
     }
+
+     // health bar
+    /* let currentHealth = maxHealth
+    let healthbarWidth = 300;
+    let healthbarHeight = 30;
+
+    function draw() {
+        background(220)
+        drawHealthbar();
+
+        function drawHealthbar() {
+        let healthPercentage = currentHealth / maxHealth;
+        let healthbarColor;
+
+        if (currenthealth > 60) {
+        healthBarColor = color(76, 175, 80); // green
+
+        } else if (currentHealth > 30) {
+        healthBarColor = color(255, 165, 0); // orange
+
+        } else {
+        healthBarColor = color(244, 67, 54); // red
+        
+        }
+
+        fill(220);
+        stroke(0);
+        rect(50, 50, healthBarWidth * healthPercentage, healthbarHeight);
+
+        } // code uit internet, moet nog aan werken
+        
+          
+        
+
+
+    } *
 };
-
-var healthBar = function() { // health bar
-
-    fill("red");
-    rect(0, 0, health, 20);
-
-
-}
+    
 
 var checkGameover = function() {
     // Check of HP 0 is
