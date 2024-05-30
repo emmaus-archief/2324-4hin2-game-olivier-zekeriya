@@ -169,9 +169,9 @@ var beweegAlles = function() {
     }
 
     // Ryu niet meer dan 1 keer per frame actie punch uitvoeren
-    if (ryuAction === PUNCH) {
+    /*if (ryuAction === PUNCH) {
         keyIsPressed(81) = 
-    }
+    } */
 
 
     
@@ -181,9 +181,9 @@ var beweegAlles = function() {
     }
 
     // Ryu niet meer dan 1 keer per frame actie highkick uitvoeren
-    if (ryuAction === HIGHKICK) {
+    /*if (ryuAction === HIGHKICK) {
         
-    }
+    } */
 
 
     
@@ -194,9 +194,9 @@ var beweegAlles = function() {
     }
 
     // Ken niet meer dan 1 keer per frame actie punch uitvoeren
-    if (kenAction === PUNCH) {
+    /*if (kenAction === PUNCH) {
 
-    }
+    } */
 
 
     
@@ -206,9 +206,9 @@ var beweegAlles = function() {
     }
 
     // Ken niet meer dan 1 keer per frame actie highkick uitvoeren
-    if (kenAction === HIGHKICK) {
+    /*if (kenAction === HIGHKICK) {
 
-    }
+    } */
 
     
     // Ryu niet laten lopen tijdens het aanvallen
