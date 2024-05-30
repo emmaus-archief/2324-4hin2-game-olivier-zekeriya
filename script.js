@@ -341,7 +341,12 @@ var tekenAlles = function() {
         stroke(0);
         rect(50, 50, healthBarWidth * healthPercentage, healthbarHeight);
 
-        } // code uit internet, moet nog aan werken
+        } 
+        
+        function takeDamage(damage) {
+        currentHealth = Math.min(maxHealth, currentHealth - damage);
+            updateHealthBar();
+        }     // code uit internet, moet nog aan werken
         
           
         
@@ -383,6 +388,15 @@ function setup() {
     image(img_bg, 0, 0); // Geef achtergrond weer
 }
 
+/*function setup(){
+createCanvas(1920, 1040);
+    
+}
+function preload() {
+    loadFont ('Act_Of_Rejection.ttf')
+    weet niet zeker of deze font werkt, maar ik wilde het nog proberen.
+}
+/*
 /**
  * draw
  * de code in deze functie wordt 50 keer per seconde
