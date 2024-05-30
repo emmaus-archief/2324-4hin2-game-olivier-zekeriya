@@ -410,14 +410,19 @@ function draw() {
 
     if (spelStatus === UITLEG) {
         // teken uitleg scherm
-        textSize(80);
-        fill('yellow');
         image(img_bg, 0, 0, 1920, 1040);
         animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // Ryu
         animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // ken
-        text('PRESS V TO PLAY', 240, 120);
-        text('Ryu: A=left and D=right', 240, 240);
-        text('Ken: Arrow left=left and Arrow right=right', 240, 360);
+        textSize(64);
+        fill('yellow');
+        text('PRESS V TO PLAY', 700, 80);
+
+        fill('skyblue');
+        textSize(40);
+        text('Ryu: A=left and D=right', 240, 160);
+        text('Ryu: Q=Punch and E=Highkick', 300, 240);
+        text('Ken: Arrow left=left and Arrow right=right', 1140, 160);
+        text('Ken: O=Punch and P=Highkick', 1080, 240);
         
         if (keyIsDown(86)) {  // key V
             spelerX = 250;
