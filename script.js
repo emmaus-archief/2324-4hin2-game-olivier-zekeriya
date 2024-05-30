@@ -149,6 +149,8 @@ var beweegAlles = function() {
         spelerX = spelerX + snelheid_spelers;
     }
 
+
+    
     // vijand 
     if (keyIsDown(37) && botsing === false) { //Left arrow key
         vijandX = vijandX - snelheid_spelers;
@@ -158,28 +160,57 @@ var beweegAlles = function() {
         vijandX = vijandX + snelheid_spelers;
     }
 
+
+    
     // Ryu punch
     if (keyIsDown(81)) { // key Q
         ryuAction = PUNCH;
         //spelerX = spelerX + "punch?"
     }
 
+    // Ryu niet meer dan 1 keer per frame actie punch uitvoeren
+    if (ryuAction === PUNCH) {
+        keyIsPressed(81) = 
+    }
+
+
+    
     // Ryu highkick
     if (keyIsDown(69)) { // key E
         ryuAction = HIGHKICK;
     }
 
+    // Ryu niet meer dan 1 keer per frame actie highkick uitvoeren
+    if (ryuAction === HIGHKICK) {
+        
+    }
+
+
+    
     // Ken punch
     if (keyIsDown(80)) { // key P
         kenAction = PUNCH;
         //spelerX = spelerX + "punch?"
     }
 
+    // Ken niet meer dan 1 keer per frame actie punch uitvoeren
+    if (kenAction === PUNCH) {
+
+    }
+
+
+    
     // Ken highkick
     if (keyIsDown(79)) { // key O
         kenAction = HIGHKICK;
     }
 
+    // Ken niet meer dan 1 keer per frame actie highkick uitvoeren
+    if (kenAction === HIGHKICK) {
+
+    }
+
+    
     // Ryu niet laten lopen tijdens het aanvallen
     if (ryuAction === PUNCH) {
         snelheid_spelers = 0;
@@ -242,15 +273,15 @@ var tekenAlles = function() {
     image(img_bg, 0, 0);
 
     if (ryuAction === HIGHKICK) {
-        animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // animeer highkick totdat alle frame zijn geweest.
+        animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // animeer highkick                totdat alle frame zijn geweest.
         let actionframe = gameFrame;
-        if (gameFrame = actionframe + ryu.highkick.loc.length) { // als alle frames zijn geweest, reset gameFrame
+        if (gameFrame = actionframe + ryu.highkick.loc.length) { // als alle frames zijn geweest,                 reset gameFrame
             ryuAction = idle;
         }
     } else if (ryuAction === PUNCH) {
-        animeer_sprite(img_speler, "ryu", "punch", spelerX, spelerY, ratio) // animeer highkick totdat alle frame zijn geweest.
+        animeer_sprite(img_speler, "ryu", "punch", spelerX, spelerY, ratio) // animeer highkick                 totdat alle frame zijn geweest.
         let actionframe = gameFrame;
-        if (gameFrame = actionframe + ryu.punch.loc.length) { // als alle frames zijn geweest, reset gameFrame
+        if (gameFrame = actionframe + ryu.punch.loc.length) { // als alle frames zijn geweest, reset             gameFrame
             ryuAction = idle;
         }
     } else {
@@ -261,13 +292,13 @@ var tekenAlles = function() {
     if (kenAction === HIGHKICK) {
         animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // Ken
         let actionframe = gameFrame;
-        if (gameFrame = actionframe + ken.highkick.loc.length) { // als alle frames zijn geweest, reset gameFrame
+        if (gameFrame = actionframe + ken.highkick.loc.length) { // als alle frames zijn geweest,                 reset gameFrame
             kenAction = idle;
         }
     } else if (kenAction === PUNCH) {
         animeer_sprite(img_vijand, "ken", "punch", vijandX, vijandY, ratio) // Ken
         let actionframe = gameFrame;
-        if (gameFrame = actionframe + ken.punch.loc.length) { // als alle frames zijn geweest, reset gameFrame
+        if (gameFrame = actionframe + ken.punch.loc.length) { // als alle frames zijn geweest, reset             gameFrame
             kenAction = idle;
         }
     } else {
@@ -372,7 +403,7 @@ function draw() {
         textSize(100);
         fill('yellow');
         text('KO! PRESS SPACE TO START', 240, 520);
-        if (keyIsDown(32)) {  // Spatie
+        if (keyIsDown(32)) {  // key SPATIE
             spelStatus = UITLEG;
         }
     }
@@ -385,13 +416,14 @@ function draw() {
         animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // Ryu
         animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // ken
         text('PRESS V TO PLAY', 240, 120);
-        text('Player one: A=left and D=right', 240, 320);
-
-        if (keyIsDown(86)) {  // V
+        text('Ryu: A=left and D=right', 240, 240);
+        text('Ken: Arrow left=left and Arrow right=right', 240, 360);
+        
+        if (keyIsDown(86)) {  // key V
             spelerX = 250;
             vijandX = 1300;
             spelStatus = SPELEN;
             health = 100;
         }
     }
-}
+}                         

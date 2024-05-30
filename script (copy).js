@@ -50,6 +50,8 @@ var beweegAlles = function() {
       spelerX = spelerX +15;
   }
   
+  
+  
   // vijand 
   if (keyIsDown(37)) { //Left
     vijandX = vijandX -15;
