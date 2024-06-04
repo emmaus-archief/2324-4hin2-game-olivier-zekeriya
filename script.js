@@ -273,15 +273,15 @@ var tekenAlles = function() {
     image(img_bg, 0, 0);
 
     if (ryuAction === HIGHKICK) {
-        animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // animeer highkick                totdat alle frame zijn geweest.
+        animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // animeer highkick totdat alle frame zijn geweest.
         let actionframe = gameFrame;
-        if (gameFrame = actionframe + ryu.highkick.loc.length) { // als alle frames zijn geweest,                 reset gameFrame
+        if (gameFrame = actionframe + ryu.highkick.loc.length) { // als alle frames zijn geweest, reset gameFrame
             ryuAction = idle;
         }
     } else if (ryuAction === PUNCH) {
-        animeer_sprite(img_speler, "ryu", "punch", spelerX, spelerY, ratio) // animeer highkick                 totdat alle frame zijn geweest.
+        animeer_sprite(img_speler, "ryu", "punch", spelerX, spelerY, ratio) // animeer highkick totdat alle frame zijn geweest.
         let actionframe = gameFrame;
-        if (gameFrame = actionframe + ryu.punch.loc.length) { // als alle frames zijn geweest, reset             gameFrame
+        if (gameFrame = actionframe + ryu.punch.loc.length) { // als alle frames zijn geweest, reset gameFrame
             ryuAction = idle;
         }
     } else {
@@ -313,20 +313,19 @@ var tekenAlles = function() {
         spelStatus = GAMEOVER;
     }
 
+    
+        
      // health bar
     /* let currentHealth = maxHealth
-    let healthbarWidth = 300;
-    let healthbarHeight = 30;
-
-    function draw() {
-        background(220)
-        drawHealthbar();
+    0;
+    let healthBarWidth = 300;
+    let healthBarHeight = 30;
 
         function drawHealthbar() {
         let healthPercentage = currentHealth / maxHealth;
-        let healthbarColor;
+        let healthBarColor;
 
-        if (currenthealth > 60) {
+        if (currentHealth > 60) {
         healthBarColor = color(76, 175, 80); // green
 
         } else if (currentHealth > 30) {
@@ -334,27 +333,22 @@ var tekenAlles = function() {
 
         } else {
         healthBarColor = color(244, 67, 54); // red
-        
         }
 
         fill(220);
         stroke(0);
-        rect(50, 50, healthBarWidth * healthPercentage, healthbarHeight);
+        rect(50, 50, healthBarWidth * healthPercentage, healthBarHeight);
 
+        fill(healthBarColor);
+        noStroke();
+        rect(50, 50, healthBarWidth * healthPercentage, healthBarHeight);
         } 
+
         
         function takeDamage(damage) {
-        currentHealth = Math.min(maxHealth, currentHealth - damage);
-            updateHealthBar();
-        }     // code uit internet, moet nog aan werken
-        
-          
-        
-
-
-    } */
-};
-    
+        currentHealth = max(0, currentHealth - damage);
+        }     // code uit internet, moet nog aan werken */
+}; 
 
 var checkGameover = function() {
     // Check of HP 0 is
@@ -415,7 +409,7 @@ function draw() {
     if (spelStatus === GAMEOVER) {
         // teken game-over scherm
         textSize(100);
-        fill('yellow');
+        fill('#00fe00');
         text('KO! PRESS SPACE TO START', 240, 520);
         if (keyIsDown(32)) {  // key SPATIE
             spelStatus = UITLEG;
