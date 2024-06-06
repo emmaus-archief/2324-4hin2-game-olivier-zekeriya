@@ -242,7 +242,7 @@ var verwerkBotsing = function() {
     }
 
     if (botsing === true) {
-        health = health - 34;
+        health = health - 50;
         spelerX = spelerX - 100;
         vijandX = vijandX + 125;
     }
@@ -408,9 +408,13 @@ function draw() {
     }
     if (spelStatus === GAMEOVER) {
         // teken game-over scherm
-        textSize(100);
-        fill('#00fe00');
-        text('KO! PRESS SPACE TO START', 240, 520);
+        fill('#009966');
+        textSize(120);
+        text('KNOCK OUT!', 560, 260);
+        
+        fill('#cadafb');
+        textSize(80);
+        text('PRESS SPACE TO START', 440, 480);
         if (keyIsDown(32)) {  // key SPATIE
             spelStatus = UITLEG;
         }
