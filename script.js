@@ -39,7 +39,7 @@ var bg;
 
 var ratio = 4; // vergrotings ratio van sprites
 var gameFrame = 0; // Eerste frame van het spel
-const staggerFrames = 30; // aantal frames om te vertragen
+const staggerFrames = 10; // aantal frames om te vertragen
 var actionFrameRyu = 0; // frame nummer op moment van actie van Ryu
 var actionFrameKen = 0; // frame nummer op moment van actie van Ken
 
@@ -94,7 +94,7 @@ const ken =
     },
     punch: {
         loc: [
-            { x: 1268, y: 285, width: 95, height: 95 },
+            { x: 1264, y: 285, width: 95, height: 95 },
             { x: 1365, y: 285, width: 95, height: 95 }
         ]
     },
@@ -135,7 +135,6 @@ function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio) {
     let sw = eval(sprite_name + '.' + sprite_action + '.loc[frame].width'); // width van frame
     let sh = eval(sprite_name + '.' + sprite_action + '.loc[frame].height'); // height van frame
     image(img, dx, dy, sw * ratio, sh * ratio, sx, sy, sw, sh);
-    gameFrame++; // verhoog gameFrame met 1
 }
 
 /**
@@ -164,24 +163,28 @@ var beweegAlles = function() {
     // Ryu punch
     if (keyIsDown(81)) { // key Q
         ryuAction = PUNCH;
+        gameFrame = 0; // reset gameframe om animatie netjes te starten bij eerste sprite frame
         actionFrameRyu = gameFrame;
     }
 
     // Ryu highkick
     if (keyIsDown(69)) { // key E
         ryuAction = HIGHKICK;
+        gameFrame = 0; // reset gameframe om animatie netjes te starten bij eerste sprite frame
         actionFrameRyu = gameFrame;
     }
 
     // Ken punch
     if (keyIsDown(80)) { // key P
         kenAction = PUNCH;
+        gameFrame = 0; // reset gameframe om animatie netjes te starten bij eerste sprite frame
         actionFrameKen = gameFrame;
     }
 
     // Ken highkick
     if (keyIsDown(79)) { // key O
         kenAction = HIGHKICK;
+        gameFrame = 0; // reset gameframe om animatie netjes te starten bij eerste sprite frame
         actionFrameKen = gameFrame;
     }
 };
@@ -235,12 +238,12 @@ var tekenAlles = function() {
     // Animeer Ryu
     if (ryuAction === HIGHKICK) {
         animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // animeer highkick frame
-        if (gameFrame >= actionFrameRyu + ryu.highkick.loc.length * staggerFrames) { // alle frames zijn geweest, reset gameFrame
+        if (gameFrame >= actionFrameRyu + ryu.highkick.loc.length * staggerFrames) { // alle frames zijn geweest, reset actie
             ryuAction = idle;
         }
     } else if (ryuAction === PUNCH) {
         animeer_sprite(img_speler, "ryu", "punch", spelerX, spelerY, ratio) // animeer highkick frame
-        if (gameFrame >= actionFrameRyu + ryu.punch.loc.length * staggerFrames) { // alle frames  geweest, reset gameFrame
+        if (gameFrame >= actionFrameRyu + ryu.punch.loc.length * staggerFrames) { // alle frames  geweest, reset actie
             ryuAction = idle;
         }
     } else {
@@ -250,12 +253,12 @@ var tekenAlles = function() {
     // Animeer Ken
     if (kenAction === HIGHKICK) {
         animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // Ken
-        if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest,                 reset gameFrame
+        if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest, reset actie
             kenAction = idle;
         }
     } else if (kenAction === PUNCH) {
-        animeer_sprite(img_vijand, "ken", "punch", vijandX, vijandY, ratio) // Ken
-        if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest, reset gameFrame
+        animeer_sprite(img_vijand, "ken", "punch", vijandX - 120, vijandY, ratio) // Ken met correctie naar links
+        if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest, reset actie
             kenAction = idle;
         }
     } else {
@@ -383,4 +386,5 @@ function draw() {
             actionFrameRyu = 0;
         }
     }
+    gameFrame++; // verhoog gameFrame met 1
 }                         
