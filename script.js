@@ -312,42 +312,24 @@ var tekenAlles = function() {
     if (health < 0) {
         spelStatus = GAMEOVER;
     }
-
     
-        
-     // health bar
-    /* let currentHealth = maxHealth
-    0;
-    let healthBarWidth = 300;
-    let healthBarHeight = 30;
+    // Achtergrond bar Ryu
+    fill('black');
+    rect(95, 195, 610, 70);
+   
+    // Achtergrond bar Ken
+    fill('black');
+    rect(1195, 195, 610, 70);
+    
+    // health bar Ryu
+    var health_bar_width = health * 6;
+    fill('red');
+    rect(100, 200, health_bar_width, 60);
 
-        function drawHealthbar() {
-        let healthPercentage = currentHealth / maxHealth;
-        let healthBarColor;
-
-        if (currentHealth > 60) {
-        healthBarColor = color(76, 175, 80); // green
-
-        } else if (currentHealth > 30) {
-        healthBarColor = color(255, 165, 0); // orange
-
-        } else {
-        healthBarColor = color(244, 67, 54); // red
-        }
-
-        fill(220);
-        stroke(0);
-        rect(50, 50, healthBarWidth * healthPercentage, healthBarHeight);
-
-        fill(healthBarColor);
-        noStroke();
-        rect(50, 50, healthBarWidth * healthPercentage, healthBarHeight);
-        } 
-
-        
-        function takeDamage(damage) {
-        currentHealth = max(0, currentHealth - damage);
-        }     // code uit internet, moet nog aan werken */
+    // health bar Ken
+    fill('red');
+    rect(1200, 200, health_bar_width, 60);
+    
 }; 
 
 var checkGameover = function() {
@@ -410,7 +392,7 @@ function draw() {
         // teken game-over scherm
         fill('#009966');
         textSize(120);
-        text('KNOCK OUT!', 560, 260);
+        text('KNOCK OUT!', 560, 120);
         
         fill('#cadafb');
         textSize(80);
