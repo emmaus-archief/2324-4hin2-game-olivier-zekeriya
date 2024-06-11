@@ -144,20 +144,20 @@ function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio) {
 let snelheid_spelers = 5;
 var beweegAlles = function() {
     // speler
-    if (keyIsDown(65)) { // Left key A
+    if (keyIsDown(65) && ryuAction === idle) { // Left key A. Niet lopen als er een actie actief is.
         spelerX = spelerX - snelheid_spelers;
     }
 
-    if (keyIsDown(68) && botsing === false) { // Right key D. Alleen lopen als er geen botsing is
+    if (keyIsDown(68) && botsing === false && ryuAction === idle) { // Right key D. Alleen lopen als er geen botsing is. Niet lopen als er een actie actief is.
         spelerX = spelerX + snelheid_spelers;
     }
 
     // vijand 
-    if (keyIsDown(37) && botsing === false) { // Left arrow key. Alleen lopen als er geen botsing is
+    if (keyIsDown(37) && botsing === false && kenAction === idle) { // Left arrow key. Alleen lopen als er geen botsing is. Niet lopen als er een actie actief is.
         vijandX = vijandX - snelheid_spelers;
     }
 
-    if (keyIsDown(39)) { // Right arrow key
+    if (keyIsDown(39) && kenAction === idle) { // Right arrow key. Niet lopen als er een actie actief is.
         vijandX = vijandX + snelheid_spelers;
     }
 
@@ -184,15 +184,6 @@ var beweegAlles = function() {
         kenAction = HIGHKICK;
         actionFrameKen = gameFrame;
     }
-
-    /*
-    // Ryu en Ken niet laten lopen tijdens het aanvallen
-    if (ryuAction != idle || kenAction != idle) {
-        snelheid_spelers = 0;
-    } else{
-        snelheid_spelers = 5;
-    } 
-    */
 };
 
 /**
@@ -255,7 +246,7 @@ var tekenAlles = function() {
     } else {
         animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio) // Ryu
     }
-    
+
     // Animeer Ken
     if (kenAction === HIGHKICK) {
         animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // Ken
@@ -270,7 +261,7 @@ var tekenAlles = function() {
     } else {
         animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio) // Ken
     }
-    
+
     // punten en health
     if (healthSpeler <= 0 || healthVijand <= 0) {
         spelStatus = GAMEOVER;
@@ -288,7 +279,7 @@ var tekenAlles = function() {
     var health_bar_width_ryu = healthSpeler * 6; // De grote van de balk is 600, omdat health = 100
     fill('red');
     if (healthSpeler <= 0) {
-         health_bar_width_ryu = 0;
+        health_bar_width_ryu = 0;
     }
     rect(100, 200, health_bar_width_ryu, 60);
 
@@ -296,7 +287,7 @@ var tekenAlles = function() {
     var health_bar_width_ken = healthVijand * 6; // De grote van de balk is 600, omdat health = 100
     fill('red');
     if (healthVijand <= 0) {
-         health_bar_width_ken = 0;
+        health_bar_width_ken = 0;
     }
     rect(1200, 200, health_bar_width_ken, 60);
 
