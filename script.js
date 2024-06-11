@@ -287,11 +287,17 @@ var tekenAlles = function() {
     // health bar Ryu
     var health_bar_width_ryu = healthSpeler * 6; // De grote van de balk is 600, omdat health = 100
     fill('red');
+    if (healthSpeler <= 0) {
+         health_bar_width_ryu = 0;
+    }
     rect(100, 200, health_bar_width_ryu, 60);
 
     // health bar Ken
     var health_bar_width_ken = healthVijand * 6; // De grote van de balk is 600, omdat health = 100
     fill('red');
+    if (healthVijand <= 0) {
+         health_bar_width_ken = 0;
+    }
     rect(1200, 200, health_bar_width_ken, 60);
 
 };
@@ -344,9 +350,12 @@ function draw() {
     if (spelStatus === GAMEOVER) {
         // teken game-over scherm
         fill('#009966');
-        textSize(120);
-        if
-        text('KNOCK OUT!', 560, 120);
+        textSize(108);
+        if (healthSpeler <= 0) {
+            text('KO! KEN WINS!', 560, 120);
+        } else {
+            text('KO! RYU WINS!', 560, 120);
+        }
 
         fill('#cadafb');
         textSize(80);
