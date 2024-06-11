@@ -27,17 +27,21 @@ const HIGHKICK = 3;
 var ryuAction = idle;
 var kenAction = idle;
 
-var spelerX = 250; // x-positie van speler
-var spelerY = 600; // y-positie van speler 
-var vijandX = 1300; // x-positie van vijand
-var vijandY = 600; // y-positie van vijand
-var health = 100;  // health van speler
+var spelerX = 250; // x-positie van speler Ryu
+var spelerY = 600; // y-positie van speler Ryu
+var vijandX = 1300; // x-positie van vijand Ken
+var vijandY = 600; // y-positie van vijand Ken
+var healthSpeler = 100;  // health van speler Ryu
+var healthVijand = 100;  // health van vijand Ken
+var hit;
 var botsing;
 var bg;
 
 var ratio = 4; // vergrotings ratio van sprites
 var gameFrame = 0; // Eerste frame van het spel
-const staggerFrames = 30; // aantal frames vertragen
+const staggerFrames = 30; // aantal frames om te vertragen
+var actionFrameRyu = 0; // frame nummer op moment van actie van Ryu
+var actionFrameKen = 0; // frame nummer op moment van actie van Ken
 
 // Sprite objecten voor beide spelers met de locaties elke sprite in de sprite sheet per actie
 const ryu =
@@ -132,7 +136,6 @@ function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio) {
     let sh = eval(sprite_name + '.' + sprite_action + '.loc[frame].height'); // height van frame
     image(img, dx, dy, sw * ratio, sh * ratio, sx, sy, sw, sh);
     gameFrame++; // verhoog gameFrame met 1
-
 }
 
 /**
@@ -141,128 +144,94 @@ function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio) {
 let snelheid_spelers = 5;
 var beweegAlles = function() {
     // speler
-    if (keyIsDown(65)) { //Left key A
+    if (keyIsDown(65)) { // Left key A
         spelerX = spelerX - snelheid_spelers;
     }
 
-    if (keyIsDown(68) && botsing === false) { //Right key D
+    if (keyIsDown(68) && botsing === false) { // Right key D. Alleen lopen als er geen botsing is
         spelerX = spelerX + snelheid_spelers;
     }
 
-
-    
     // vijand 
-    if (keyIsDown(37) && botsing === false) { //Left arrow key
+    if (keyIsDown(37) && botsing === false) { // Left arrow key. Alleen lopen als er geen botsing is
         vijandX = vijandX - snelheid_spelers;
     }
 
-    if (keyIsDown(39)) { //Right arrow key
+    if (keyIsDown(39)) { // Right arrow key
         vijandX = vijandX + snelheid_spelers;
     }
 
-
-    
     // Ryu punch
     if (keyIsDown(81)) { // key Q
         ryuAction = PUNCH;
-        //spelerX = spelerX + "punch?"
+        actionFrameRyu = gameFrame;
     }
 
-    // Ryu niet meer dan 1 keer per frame actie punch uitvoeren
-    /*if (ryuAction === PUNCH) {
-        keyIsPressed(81) = 
-    } */
-
-
-    
     // Ryu highkick
     if (keyIsDown(69)) { // key E
         ryuAction = HIGHKICK;
+        actionFrameRyu = gameFrame;
     }
 
-    // Ryu niet meer dan 1 keer per frame actie highkick uitvoeren
-    /*if (ryuAction === HIGHKICK) {
-        
-    } */
-
-
-    
     // Ken punch
     if (keyIsDown(80)) { // key P
         kenAction = PUNCH;
-        //spelerX = spelerX + "punch?"
+        actionFrameKen = gameFrame;
     }
 
-    // Ken niet meer dan 1 keer per frame actie punch uitvoeren
-    /*if (kenAction === PUNCH) {
-
-    } */
-
-
-    
     // Ken highkick
     if (keyIsDown(79)) { // key O
         kenAction = HIGHKICK;
+        actionFrameKen = gameFrame;
     }
 
-    // Ken niet meer dan 1 keer per frame actie highkick uitvoeren
-    /*if (kenAction === HIGHKICK) {
-
-    } */
-
-    
-    // Ryu niet laten lopen tijdens het aanvallen
-    if (ryuAction === PUNCH) {
+    /*
+    // Ryu en Ken niet laten lopen tijdens het aanvallen
+    if (ryuAction != idle || kenAction != idle) {
         snelheid_spelers = 0;
     } else{
         snelheid_spelers = 5;
+    } 
+    */
+};
+
+/**
+ * Checkt hits
+ * Updatet globale variabelen punten en health
+ */
+var verwerkHits = function() {
+    // Hits Ryu en Ken voor punch of highkick
+    if (ryuAction === PUNCH && vijandX - spelerX < 350) {
+        hit = true;
+        healthVijand = healthVijand - 10; // Ken 10 damage als Ryu puncht
+    } else if (ryuAction === HIGHKICK && vijandX - spelerX < 370) {
+        hit = true;
+        healthVijand = healthVijand - 20; // Ken 20 damage als Ryu highkickt
+    } else if (kenAction === PUNCH && vijandX - spelerX < 350) {
+        hit = true;
+        healthSpeler = healthSpeler - 10; // Ryu 10 damage als Ken puncht
+    } else if (kenAction === HIGHKICK && vijandX - spelerX < 370) {
+        hit = true;
+        healthSpeler = healthSpeler - 20; // Ryu 20 damage als Ken highkickt
+    } else {
+        hit = false;
     }
 
-    // Ken niet laten lopen tijdens het aanvallen
-    if (kenAction === PUNCH) {
-        snelheid_spelers = 0;
-    } else{
-        snelheid_spelers = 5;
+    if (hit === true) {
+        spelerX = spelerX - 100;
+        vijandX = vijandX + 100;
     }
 };
 
 /**
- * Checkt botsingen
- * Verwijdert neergeschoten dingen
- * Updatet globale variabelen punten en health
+ * Checkt botsing tussen beide spelers
  */
 var verwerkBotsing = function() {
-    // botsing Ryu punch
-    if (ryuAction === PUNCH && vijandX - spelerX < 350) {
-        botsing = true;
-    } else if (ryuAction === HIGHKICK && vijandX - spelerX < 370) {
+    if (vijandX - spelerX < 250) {
         botsing = true;
     } else {
         botsing = false;
     }
-
-    if (botsing === true) {
-        health = health - 50;
-        spelerX = spelerX - 100;
-        vijandX = vijandX + 125;
-    }
-
-    /* if (spelerX - vijandX < 225 && spelerX - vijandX > -225) {
-        botsing = true;
-    }
-    else {
-        botsing = false;
-    }
-
-    if (botsing === true) {
-        health = health - 50;
-        spelerX = 250;
-        vijandX = 1300;
-    } 
-    */
-    // botsing highkick
-
-    // update punten en health
 };
 
 /**
@@ -272,65 +241,60 @@ var tekenAlles = function() {
     // achtergrond weergeven en verversen
     image(img_bg, 0, 0);
 
+    // Animeer Ryu
     if (ryuAction === HIGHKICK) {
-        animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // animeer highkick totdat alle frame zijn geweest.
-        let actionframe = gameFrame;
-        if (gameFrame = actionframe + ryu.highkick.loc.length) { // als alle frames zijn geweest, reset gameFrame
+        animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // animeer highkick frame
+        if (gameFrame >= actionFrameRyu + ryu.highkick.loc.length * staggerFrames) { // alle frames zijn geweest, reset gameFrame
             ryuAction = idle;
         }
     } else if (ryuAction === PUNCH) {
-        animeer_sprite(img_speler, "ryu", "punch", spelerX, spelerY, ratio) // animeer highkick totdat alle frame zijn geweest.
-        let actionframe = gameFrame;
-        if (gameFrame = actionframe + ryu.punch.loc.length) { // als alle frames zijn geweest, reset gameFrame
+        animeer_sprite(img_speler, "ryu", "punch", spelerX, spelerY, ratio) // animeer highkick frame
+        if (gameFrame >= actionFrameRyu + ryu.punch.loc.length * staggerFrames) { // alle frames  geweest, reset gameFrame
             ryuAction = idle;
         }
     } else {
         animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio) // Ryu
     }
-
+    
     // Animeer Ken
     if (kenAction === HIGHKICK) {
         animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // Ken
-        let actionframe = gameFrame;
-        if (gameFrame = actionframe + ken.highkick.loc.length) { // als alle frames zijn geweest,                 reset gameFrame
+        if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest,                 reset gameFrame
             kenAction = idle;
         }
     } else if (kenAction === PUNCH) {
         animeer_sprite(img_vijand, "ken", "punch", vijandX, vijandY, ratio) // Ken
-        let actionframe = gameFrame;
-        if (gameFrame = actionframe + ken.punch.loc.length) { // als alle frames zijn geweest, reset             gameFrame
+        if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest, reset gameFrame
             kenAction = idle;
         }
     } else {
         animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio) // Ken
     }
-
-
-    // aanvallen
-
+    
     // punten en health
-    if (health < 0) {
+    if (healthSpeler <= 0 || healthVijand <= 0) {
         spelStatus = GAMEOVER;
     }
-    
+
     // Achtergrond bar Ryu
     fill('black');
     rect(95, 195, 610, 70);
-   
+
     // Achtergrond bar Ken
     fill('black');
     rect(1195, 195, 610, 70);
-    
+
     // health bar Ryu
-    var health_bar_width = health * 6;
+    var health_bar_width_ryu = healthSpeler * 6; // De grote van de balk is 600, omdat health = 100
     fill('red');
-    rect(100, 200, health_bar_width, 60);
+    rect(100, 200, health_bar_width_ryu, 60);
 
     // health bar Ken
+    var health_bar_width_ken = healthVijand * 6; // De grote van de balk is 600, omdat health = 100
     fill('red');
-    rect(1200, 200, health_bar_width, 60);
-    
-}; 
+    rect(1200, 200, health_bar_width_ken, 60);
+
+};
 
 var checkGameover = function() {
     // Check of HP 0 is
@@ -364,15 +328,6 @@ function setup() {
     image(img_bg, 0, 0); // Geef achtergrond weer
 }
 
-/*function setup(){
-createCanvas(1920, 1040);
-    
-}
-function preload() {
-    loadFont ('Act_Of_Rejection.ttf')
-    weet niet zeker of deze font werkt, maar ik wilde het nog proberen.
-}
-/*
 /**
  * draw
  * de code in deze functie wordt 50 keer per seconde
@@ -382,18 +337,17 @@ function preload() {
 function draw() {
     if (spelStatus === SPELEN) {
         beweegAlles();
+        verwerkHits();
         verwerkBotsing();
         tekenAlles();
-        if (health <= 0) {
-            spelStatus = GAMEOVER;
-        }
     }
     if (spelStatus === GAMEOVER) {
         // teken game-over scherm
         fill('#009966');
         textSize(120);
+        if
         text('KNOCK OUT!', 560, 120);
-        
+
         fill('#cadafb');
         textSize(80);
         text('PRESS SPACE TO START', 440, 480);
@@ -405,8 +359,8 @@ function draw() {
     if (spelStatus === UITLEG) {
         // teken uitleg scherm
         image(img_bg, 0, 0, 1920, 1040);
-        animeer_sprite(img_speler, "ryu", "highkick", spelerX, spelerY, ratio) // Ryu
-        animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // ken
+        animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio) // Ryu
+        animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio) // ken
         textSize(64);
         fill('yellow');
         text('PRESS V TO PLAY', 700, 80);
@@ -417,12 +371,16 @@ function draw() {
         text('Ryu: Q=Punch and E=Highkick', 300, 240);
         text('Ken: Arrow left=left and Arrow right=right', 1140, 160);
         text('Ken: O=Punch and P=Highkick', 1080, 240);
-        
+
         if (keyIsDown(86)) {  // key V
             spelerX = 250;
             vijandX = 1300;
             spelStatus = SPELEN;
-            health = 100;
+            healthSpeler = 100;
+            healthVijand = 100;
+            gameFrame = 0;
+            actionFrameKen = 0;
+            actionFrameRyu = 0;
         }
     }
 }                         
