@@ -418,10 +418,10 @@ function draw() {
 
         fill('skyblue');
         textSize(40);
-        text("Ryu: A=left and D=right", 240, 160);
-        text('Ryu: Q=Punch and E=Highkick', 300, 240);
-        text('Ken: Arrow left=left and Arrow right=right', 1140, 160);
-        text('Ken: O=Punch and P=Highkick', 1080, 240);
+        text("Ryu: A is left and D is right", 240, 160);
+        text('Ryu: Q is Punch and E is Highkick', 300, 240);
+        text('Ken: Use arrows', 1140, 160);
+        text('Ken: O is Punch and P is Highkick', 1080, 240);
 
         if (keyIsDown(86)) {  // key V
             spelerX = 250;
