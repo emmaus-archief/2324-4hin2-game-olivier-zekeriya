@@ -29,13 +29,15 @@ var kenAction = idle;
 
 var spelerX = 250; // x-positie van speler Ryu
 var spelerY = 600; // y-positie van speler Ryu
-var vijandX = 1300; // x-positie van vijand Ken
+var vijandX = 1550; // x-positie van vijand Ken
 var vijandY = 600; // y-positie van vijand Ken
 var healthSpeler = 100;  // health van speler Ryu
 var healthVijand = 100;  // health van vijand Ken
 var hit;
 var botsing;
 var bg;
+var ryuScore = 0; // score van aantal overwinningen van Ryu
+var kenScore = 0; // score van aantal overwinningen van Ken
 
 var ratio = 4; // vergrotings ratio van sprites
 var flip = false; // flip sprite
@@ -80,53 +82,6 @@ const ryu =
     }
 }
 
-/*
-const kenflipped =
-{
-    imagefilename: "ken-spritesheet.png",
-    idle: {
-        loc: [
-            { x: 1140, y: 20, width: 60, height: 100 },
-            { x: 1206, y: 20, width: 60, height: 100 },
-            { x: 1270, y: 20, width: 60, height: 100 },
-            { x: 1335, y: 20, width: 60, height: 100 },
-            { x: 1402, y: 20, width: 60, height: 100 },
-            { x: 1470, y: 20, width: 60, height: 100 }
-        ]
-    },
-    punch: {
-        loc: [
-            { x: 1264, y: 285, width: 95, height: 95 },
-            { x: 1365, y: 285, width: 95, height: 95 }
-        ]
-    },
-    punchlong: {
-        loc: [
-            { x: 1264, y: 285, width: 95, height: 95 },
-            { x: 1365, y: 285, width: 95, height: 95 }
-        ]
-    },
-    kick: {
-        loc: [
-            { x: 1130, y: 420, width: 65, height: 95 },
-            { x: 1200, y: 420, width: 65, height: 95 },
-            { x: 1274, y: 420, width: 120, height: 95 },
-            { x: 1395, y: 420, width: 70, height: 95 },
-            { x: 1468, y: 420, width: 70, height: 95 }
-        ]
-    },
-    highkick: {
-        loc: [
-            { x: 1130, y: 420, width: 65, height: 95 },
-            { x: 1200, y: 420, width: 65, height: 95 },
-            { x: 1274, y: 420, width: 120, height: 95 },
-            { x: 1395, y: 420, width: 70, height: 95 },
-            { x: 1468, y: 420, width: 70, height: 95 }
-        ]
-    }
-}
-*/
-
 const ken =
     {
     imagefilename: "ken-spritesheet.png",
@@ -149,8 +104,12 @@ const ken =
     },
     punchlong: {
         loc: [
-            { x: 1264, y: 285, width: 95, height: 95 },
-            { x: 1365, y: 285, width: 95, height: 95 }
+            { x: 300, y: 285, width: 62, height: 95 },
+            { x: 368, y: 285, width: 75, height: 95 },
+            { x: 450, y: 285, width: 110, height: 95 },
+            { x: 566, y: 285, width: 75, height: 95 },
+            { x: 648, y: 285, width: 62, height: 95 }
+
         ]
     },
     kick: {
@@ -205,7 +164,7 @@ function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio, flip) {
 let snelheid_spelers = 5;
 var beweegAlles = function() {
     // speler
-    if (keyIsDown(65) && ryuAction === idle) { // Left key A. Niet lopen als er een actie actief is.
+    if (keyIsDown(65) && ryuAction === idle && spelerX > 0) { // Left key A. Niet lopen als er een actie actief is.
         spelerX = spelerX - snelheid_spelers;
     }
 
@@ -218,7 +177,7 @@ var beweegAlles = function() {
         vijandX = vijandX - snelheid_spelers;
     }
 
-    if (keyIsDown(39) && kenAction === idle) { // Right arrow key. Niet lopen als er een actie actief is.
+    if (keyIsDown(39) && kenAction === idle && vijandX < img_bg.width - 60) { // Right arrow key. Niet lopen als er een actie actief is.
         vijandX = vijandX + snelheid_spelers;
     }
 
@@ -274,8 +233,16 @@ var verwerkHits = function() {
     }
 
     if (hit === true) {
-        spelerX = spelerX - 100;
-        vijandX = vijandX + 100;
+        if (spelerX <= 100) {
+            spelerX = 0;
+        } else {
+            spelerX = spelerX - 100;
+        }
+        if (vijandX >= img_bg.width - 100) {
+             vijandX = img_bg.width;
+        } else {
+            vijandX = vijandX + 100;
+        }
     }
 };
 
@@ -319,7 +286,7 @@ var tekenAlles = function() {
             kenAction = idle;
         }
     } else if (kenAction === PUNCH) {
-        animeer_sprite(img_vijand, "ken", "punch", vijandX, vijandY, ratio, true) // Ken met correctie naar links
+        animeer_sprite(img_vijand, "ken", "punchlong", vijandX, vijandY, ratio, true) // Ken met correctie naar links
         if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest, reset actie
             kenAction = idle;
         }
@@ -330,8 +297,13 @@ var tekenAlles = function() {
     // punten en health
     if (healthSpeler <= 0 || healthVijand <= 0) {
         spelStatus = GAMEOVER;
+        if (healthSpeler <= 0) {
+            kenScore++;
+        } else {
+            ryuScore++;
+        }
     }
-
+    
     // Achtergrond bar Ryu
     fill('black');
     rect(95, 195, 610, 70);
@@ -363,6 +335,14 @@ var checkGameover = function() {
     return false;
 }
 
+var showScores = function() {
+    // Tekent de score
+    fill('magenta');
+    textSize(90);
+    text("Ryu: " + ryuScore, 100, 100);
+    text("Ken: " + kenScore, 1633, 100)
+}
+    
 /* ********************************************* */
 /* setup() en draw() functies / hoofdprogramma   */
 /* ********************************************* */
@@ -371,10 +351,12 @@ var checkGameover = function() {
 let img_bg;
 let img_speler;
 let img_vijand;
+let fontActOfRejection;
 function preload() {
     img_bg = loadImage('arena.jpeg');
     img_speler = loadImage(ryu.imagefilename);
     img_vijand = loadImage(ken.imagefilename);
+    fontActOfRejection = loadFont('Act_Of_Rejection.ttf');
 }
 
 /**
@@ -387,6 +369,7 @@ function setup() {
     // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
     createCanvas(1920, 1040);
     background('blue');
+    textFont(fontActOfRejection); // Stelt standaard font in
     image(img_bg, 0, 0); // Geef achtergrond weer
 }
 
@@ -402,9 +385,11 @@ function draw() {
         verwerkHits();
         verwerkBotsing();
         tekenAlles();
+        showScores();
     }
     if (spelStatus === GAMEOVER) {
         // teken game-over scherm
+        showScores();
         fill('#009966');
         textSize(108);
         if (healthSpeler <= 0) {
@@ -426,20 +411,21 @@ function draw() {
         image(img_bg, 0, 0, 1920, 1040);
         animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio, false) // Ryu
         animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio, true) // ken
+        showScores();
         textSize(64);
         fill('yellow');
         text('PRESS V TO PLAY', 700, 80);
 
         fill('skyblue');
         textSize(40);
-        text('Ryu: A=left and D=right', 240, 160);
+        text("Ryu: A=left and D=right", 240, 160);
         text('Ryu: Q=Punch and E=Highkick', 300, 240);
         text('Ken: Arrow left=left and Arrow right=right', 1140, 160);
         text('Ken: O=Punch and P=Highkick', 1080, 240);
 
         if (keyIsDown(86)) {  // key V
             spelerX = 250;
-            vijandX = 1300;
+            vijandX = 1550;
             spelStatus = SPELEN;
             healthSpeler = 100;
             healthVijand = 100;
