@@ -38,6 +38,7 @@ var botsing;
 var bg;
 
 var ratio = 4; // vergrotings ratio van sprites
+var flip = false; // flip sprite
 var gameFrame = 0; // Eerste frame van het spel
 const staggerFrames = 10; // aantal frames om te vertragen
 var actionFrameRyu = 0; // frame nummer op moment van actie van Ryu
@@ -79,7 +80,8 @@ const ryu =
     }
 }
 
-const ken =
+/*
+const kenflipped =
 {
     imagefilename: "ken-spritesheet.png",
     idle: {
@@ -93,6 +95,12 @@ const ken =
         ]
     },
     punch: {
+        loc: [
+            { x: 1264, y: 285, width: 95, height: 95 },
+            { x: 1365, y: 285, width: 95, height: 95 }
+        ]
+    },
+    punchlong: {
         loc: [
             { x: 1264, y: 285, width: 95, height: 95 },
             { x: 1365, y: 285, width: 95, height: 95 }
@@ -117,6 +125,53 @@ const ken =
         ]
     }
 }
+*/
+
+const ken =
+    {
+    imagefilename: "ken-spritesheet.png",
+    idle: {
+        loc: [
+            { x: 15, y: 20, width: 60, height: 100 },
+            { x: 82, y: 20, width: 60, height: 100 },
+            { x: 150, y: 20, width: 60, height: 100 },
+            { x: 218, y: 20, width: 60, height: 100 },
+            { x: 284, y: 20, width: 60, height: 100 },
+            { x: 346, y: 20, width: 60, height: 100 }
+        ]
+    },
+    punch: {
+        loc: [
+            { x: 16, y: 285, width: 66, height: 95 },
+            { x: 88, y: 285, width: 95, height: 95 },
+            { x: 188, y: 285, width: 66, height: 95 }
+        ]
+    },
+    punchlong: {
+        loc: [
+            { x: 1264, y: 285, width: 95, height: 95 },
+            { x: 1365, y: 285, width: 95, height: 95 }
+        ]
+    },
+    kick: {
+        loc: [
+            { x: 1130, y: 420, width: 65, height: 95 },
+            { x: 1200, y: 420, width: 65, height: 95 },
+            { x: 1274, y: 420, width: 120, height: 95 },
+            { x: 1395, y: 420, width: 70, height: 95 },
+            { x: 1468, y: 420, width: 70, height: 95 }
+        ]
+    },
+    highkick: {
+        loc: [
+            { x: 16, y: 420, width: 65, height: 95 },
+            { x: 82, y: 420, width: 65, height: 95 },
+            { x: 158, y: 420, width: 120, height: 95 },
+            { x: 280, y: 420, width: 70, height: 95 },
+            { x: 354, y: 420, width: 70, height: 95 }
+        ]
+    }
+}
 
 
 /* ********************************************* */
@@ -124,7 +179,7 @@ const ken =
 /* ********************************************* */
 
 // Animeer Sprite functie: img is spritesheet, sprite_name is naam uit dx en dy is doelpositie, sw en sh is breedte en hoogte enkele sprite uit source image, n is aantal sprites in reeks, ratio is vergrotingsfactor van sprites
-function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio) {
+function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio, flip) {
     let maxframes = eval(sprite_name + '.' + sprite_action + '.loc.length') // length is het totaal aantal frames van een sprite action
     let frame = Math.floor(gameFrame / staggerFrames) % maxframes; // bepaal frame nummer met vertragingsfactor
 
@@ -134,7 +189,14 @@ function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio) {
     let sy = eval(sprite_name + '.' + sprite_action + '.loc[frame].y'); // y-positie van frame
     let sw = eval(sprite_name + '.' + sprite_action + '.loc[frame].width'); // width van frame
     let sh = eval(sprite_name + '.' + sprite_action + '.loc[frame].height'); // height van frame
-    image(img, dx, dy, sw * ratio, sh * ratio, sx, sy, sw, sh);
+    if (flip === true) {
+        push();
+        scale(-1, 1); // flip sprite
+        image(img, -dx - sw, dy, sw * ratio, sh * ratio, sx, sy, sw, sh);
+        pop();
+    } else {
+        image(img, dx, dy, sw * ratio, sh * ratio, sx, sy, sw, sh);
+    }
 }
 
 /**
@@ -195,16 +257,16 @@ var beweegAlles = function() {
  */
 var verwerkHits = function() {
     // Hits Ryu en Ken voor punch of highkick
-    if (ryuAction === PUNCH && vijandX - spelerX < 350) {
+    if (ryuAction === PUNCH && vijandX - spelerX < 550) {
         hit = true;
         healthVijand = healthVijand - 10; // Ken 10 damage als Ryu puncht
-    } else if (ryuAction === HIGHKICK && vijandX - spelerX < 370) {
+    } else if (ryuAction === HIGHKICK && vijandX - spelerX < 550) {
         hit = true;
         healthVijand = healthVijand - 20; // Ken 20 damage als Ryu highkickt
-    } else if (kenAction === PUNCH && vijandX - spelerX < 350) {
+    } else if (kenAction === PUNCH && vijandX - spelerX < 550) {
         hit = true;
         healthSpeler = healthSpeler - 10; // Ryu 10 damage als Ken puncht
-    } else if (kenAction === HIGHKICK && vijandX - spelerX < 370) {
+    } else if (kenAction === HIGHKICK && vijandX - spelerX < 530) {
         hit = true;
         healthSpeler = healthSpeler - 20; // Ryu 20 damage als Ken highkickt
     } else {
@@ -221,7 +283,7 @@ var verwerkHits = function() {
  * Checkt botsing tussen beide spelers
  */
 var verwerkBotsing = function() {
-    if (vijandX - spelerX < 250) {
+    if (vijandX - spelerX < 410) {
         botsing = true;
     } else {
         botsing = false;
@@ -252,19 +314,19 @@ var tekenAlles = function() {
 
     // Animeer Ken
     if (kenAction === HIGHKICK) {
-        animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio) // Ken
+        animeer_sprite(img_vijand, "ken", "highkick", vijandX, vijandY, ratio, true) // Ken
         if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest, reset actie
             kenAction = idle;
         }
     } else if (kenAction === PUNCH) {
-        animeer_sprite(img_vijand, "ken", "punch", vijandX - 120, vijandY, ratio) // Ken met correctie naar links
+        animeer_sprite(img_vijand, "ken", "punch", vijandX, vijandY, ratio, true) // Ken met correctie naar links
         if (gameFrame >= actionFrameKen + ken.highkick.loc.length * staggerFrames) { // alle frames geweest, reset actie
             kenAction = idle;
         }
     } else {
-        animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio) // Ken
+        animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio, true) // Ken
     }
-
+    
     // punten en health
     if (healthSpeler <= 0 || healthVijand <= 0) {
         spelStatus = GAMEOVER;
@@ -362,8 +424,8 @@ function draw() {
     if (spelStatus === UITLEG) {
         // teken uitleg scherm
         image(img_bg, 0, 0, 1920, 1040);
-        animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio) // Ryu
-        animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio) // ken
+        animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio, false) // Ryu
+        animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio, true) // ken
         textSize(64);
         fill('yellow');
         text('PRESS V TO PLAY', 700, 80);
