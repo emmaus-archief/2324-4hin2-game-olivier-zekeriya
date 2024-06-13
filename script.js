@@ -38,6 +38,8 @@ var botsing;
 var bg;
 var ryuScore = 0; // score van aantal overwinningen van Ryu
 var kenScore = 0; // score van aantal overwinningen van Ken
+//var img_ryuFace;
+//var img_kenFace;
 
 var ratio = 4; // vergrotings ratio van sprites
 var flip = false; // flip sprite
@@ -306,27 +308,27 @@ var tekenAlles = function() {
     
     // Achtergrond bar Ryu
     fill('black');
-    rect(95, 195, 610, 70);
+    rect(95, 195, 710, 40);
 
     // Achtergrond bar Ken
     fill('black');
-    rect(1195, 195, 610, 70);
+    rect(1095, 195, 710, 40);
 
     // health bar Ryu
-    var health_bar_width_ryu = healthSpeler * 6; // De grote van de balk is 600, omdat health = 100
+    var health_bar_width_ryu = healthSpeler * 7; // De grote van de balk is 600, omdat health = 100
     fill('red');
     if (healthSpeler <= 0) {
         health_bar_width_ryu = 0;
     }
-    rect(100, 200, health_bar_width_ryu, 60);
+    rect(100, 200, health_bar_width_ryu, 30);
 
     // health bar Ken
-    var health_bar_width_ken = healthVijand * 6; // De grote van de balk is 600, omdat health = 100
+    var health_bar_width_ken = healthVijand * 7; // De grote van de balk is 600, omdat health = 100
     fill('red');
     if (healthVijand <= 0) {
         health_bar_width_ken = 0;
     }
-    rect(1200, 200, health_bar_width_ken, 60);
+    rect(1100, 200, health_bar_width_ken, 30);
 
 };
 
@@ -337,10 +339,10 @@ var checkGameover = function() {
 
 var showScores = function() {
     // Tekent de score
-    fill('magenta');
+    fill('#42f5c5');
     textSize(90);
-    text("Ryu: " + ryuScore, 100, 100);
-    text("Ken: " + kenScore, 1633, 100)
+    text("Ryu - " + ryuScore, 320, 135);
+    text("Ken - " + kenScore, 1360, 135)
 }
     
 /* ********************************************* */
@@ -356,6 +358,8 @@ function preload() {
     img_bg = loadImage('arena.jpeg');
     img_speler = loadImage(ryu.imagefilename);
     img_vijand = loadImage(ken.imagefilename);
+    //img_ryuFace = loadImage('ryu_face.png');
+    //img_kenFace = loadImage('ken_face.png');
     fontActOfRejection = loadFont('Act_Of_Rejection.ttf');
 }
 
@@ -372,6 +376,7 @@ function setup() {
     textFont(fontActOfRejection); // Stelt standaard font in
     image(img_bg, 0, 0); // Geef achtergrond weer
 }
+
 
 /**
  * draw
@@ -412,16 +417,16 @@ function draw() {
         animeer_sprite(img_speler, "ryu", "idle", spelerX, spelerY, ratio, false) // Ryu
         animeer_sprite(img_vijand, "ken", "idle", vijandX, vijandY, ratio, true) // ken
         showScores();
-        textSize(64);
+        textSize(72);
         fill('yellow');
-        text('PRESS V TO PLAY', 700, 80);
+        text('PRESS V TO PLAY', 720, 100);
 
         fill('skyblue');
         textSize(40);
-        text("Ryu: A is left and D is right", 240, 160);
-        text('Ryu: Q is Punch and E is Highkick', 300, 240);
-        text('Ken: Use arrows', 1140, 160);
-        text('Ken: O is Punch and P is Highkick', 1080, 240);
+        text("Ryu: A is left and D is right", 220, 200);
+        text('Ryu: Q is Punch and E is Highkick', 300, 280);
+        text('Ken: Use arrows right and left', 1200, 200);
+        text('Ken: O is Punch and P is Highkick', 1080, 280);
 
         if (keyIsDown(86)) {  // key V
             spelerX = 250;
