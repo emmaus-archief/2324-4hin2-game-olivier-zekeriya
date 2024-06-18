@@ -398,14 +398,14 @@ function draw() {
         fill('#009966');
         textSize(108);
         if (healthSpeler <= 0) {
-            text('KO! KEN WINS!', 560, 120);
+            text('KO! KEN WINS!', 640, 120);
         } else {
-            text('KO! RYU WINS!', 560, 120);
+            text('KO! RYU WINS!', 640, 120);
         }
 
         fill('#cadafb');
-        textSize(80);
-        text('PRESS SPACE TO START', 440, 480);
+        textSize(84);
+        text('PRESS SPACE TO START', 540, 480);
         if (keyIsDown(32)) {  // key SPATIE
             spelStatus = UITLEG;
         }
