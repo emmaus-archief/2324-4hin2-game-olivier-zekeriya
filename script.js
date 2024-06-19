@@ -4,7 +4,7 @@
 
    Begin met dit template voor je game opdracht,
    voeg er je eigen code aan toe.
- */
+*/
 
 /*
  * instellingen om foutcontrole van je code beter te maken 
