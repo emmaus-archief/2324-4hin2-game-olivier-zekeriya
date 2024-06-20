@@ -33,13 +33,11 @@ var vijandX = 1550; // x-positie van vijand Ken
 var vijandY = 600; // y-positie van vijand Ken
 var healthSpeler = 100;  // health van speler Ryu
 var healthVijand = 100;  // health van vijand Ken
-var hit;
-var botsing;
-var bg;
-var ryuScore = 0; // score van aantal overwinningen van Ryu
-var kenScore = 0; // score van aantal overwinningen van Ken
-//var img_ryuFace;
-//var img_kenFace;
+var hit; // geraakt of niet
+var botsing; // botsing status
+var bg; // achtergrond
+var ryuScore = 0; // startscore van aantal overwinningen van Ryu
+var kenScore = 0; // startscore van aantal overwinningen van Ken
 
 var ratio = 4; // vergrotings ratio van sprites
 var flip = false; // flip sprite
@@ -48,7 +46,7 @@ const staggerFrames = 10; // aantal frames om te vertragen
 var actionFrameRyu = 0; // frame nummer op moment van actie van Ryu
 var actionFrameKen = 0; // frame nummer op moment van actie van Ken
 
-// Sprite objecten voor beide spelers met de locaties elke sprite in de sprite sheet per actie
+// Sprite objecten voor beide spelers met de locaties van elke sprite in de spritesheet per actie en bestandsnaam van spritesheet
 const ryu =
 {
     imagefilename: "ryu-spritesheet.png",
@@ -139,7 +137,7 @@ const ken =
 /* functies die je gebruikt in je game           */
 /* ********************************************* */
 
-// Animeer Sprite functie: img is spritesheet, sprite_name is naam uit dx en dy is doelpositie, sw en sh is breedte en hoogte enkele sprite uit source image, n is aantal sprites in reeks, ratio is vergrotingsfactor van sprites
+// Animeer Sprite functie: img is spritesheet, sprite_name is spritenaam, dx en dy zijn doelposities, sw en sh is breedte en hoogte enkele sprite uit source image, ratio is vergrotingsfactor van sprites en flip is horizontaal flippen van sprite of niet
 function animeer_sprite(img, sprite_name, sprite_action, dx, dy, ratio, flip) {
     let maxframes = eval(sprite_name + '.' + sprite_action + '.loc.length') // length is het totaal aantal frames van een sprite action
     let frame = Math.floor(gameFrame / staggerFrames) % maxframes; // bepaal frame nummer met vertragingsfactor
@@ -236,18 +234,20 @@ var verwerkHits = function() {
 
     if (hit === true) {
         if (spelerX <= 100) {
-            spelerX = 0;
+            spelerX = 0; // zet spelerX op 0 als hij buiten de canvas raakt
         } else {
-            spelerX = spelerX - 100;
+            spelerX = spelerX - 100; // zet spelerX 100 pixels naar links als hij geraakt wordt
         }
+        
         if (vijandX >= img_bg.width - 100) {
-             vijandX = img_bg.width;
+             vijandX = img_bg.width; // zet VijandX op img_bg.width als hij buiten de canvas raakt
         } else {
-            vijandX = vijandX + 100;
+            vijandX = vijandX + 100; // zet VijandX 100 pixels naar rechts als hij geraakt wordt
         }
     }
 };
 
+    
 /**
  * Checkt botsing tussen beide spelers
  */
@@ -329,13 +329,14 @@ var tekenAlles = function() {
         health_bar_width_ken = 0;
     }
     rect(1100, 200, health_bar_width_ken, 30);
-
 };
 
+/* Wordt niet gebruikt
 var checkGameover = function() {
     // Check of HP 0 is
     return false;
 }
+*/
 
 var showScores = function() {
     // Tekent de score
@@ -358,8 +359,6 @@ function preload() {
     img_bg = loadImage('arena.jpeg');
     img_speler = loadImage(ryu.imagefilename);
     img_vijand = loadImage(ken.imagefilename);
-    //img_ryuFace = loadImage('ryu_face.png');
-    //img_kenFace = loadImage('ken_face.png');
     fontActOfRejection = loadFont('Act_Of_Rejection.ttf');
 }
 
@@ -376,7 +375,6 @@ function setup() {
     textFont(fontActOfRejection); // Stelt standaard font in
     image(img_bg, 0, 0); // Geef achtergrond weer
 }
-
 
 /**
  * draw
